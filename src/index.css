@@ -1,0 +1,12 @@
+@import "tailwindcss";
+:root {
+  --sky: #0960BD;
+  --sky-horizon: #deb778;
+  --water-horizon: #195381;
+  --ocean: #020f1a;
+  background: linear-gradient(to bottom, var(--sky) 0%, var(--sky-horizon) 50%, var(--water-horizon) 60%, var(--ocean) 100%) no-repeat fixed;
+}
+#root {
+  width: 100vw;
+  height: 100vh;
+}

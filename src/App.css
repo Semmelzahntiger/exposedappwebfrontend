@@ -1,0 +1,9 @@
+@import "tailwindcss";
+#app {
+  background: rgba(0,0,0,0.85);
+  border-radius: 30px;
+}
+.rounded-box {
+  border-radius: 10px;
+  border-width: 5px;
+}
