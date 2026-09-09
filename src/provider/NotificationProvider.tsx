@@ -1,4 +1,6 @@
-import {type ReactNode, useCallback, useEffect, useRef, useState} from "react";
+import {type ReactNode, useCallback, useRef, useState} from "react";
+import {Toast} from "radix-ui";
+import "../App.css";
 import {
     type Notification,
     NotificationContext,
@@ -8,69 +10,58 @@ import {
 const DURATION_MS: number = 4000;
 const EXIT_MS: number = 300;
 
-const TYPE_STYLES: Record<NotificationType, string> = {
-    info: "bg-blue-600 text-white",
-    success: "bg-green-600 text-white",
-    warning: "bg-amber-500 text-black",
-    error: "bg-red-600 text-white",
+// Gray fill comes from `.toast-root`; type only drives the border color.
+// Applied inline so it beats the base `.toast-root` border-color in the cascade.
+const TYPE_COLORS: Record<NotificationType, string> = {
+    info: "#3b82f6",
+    success: "#22c55e",
+    warning: "#f59e0b",
+    error: "#ef4444",
 };
 
+type InternalNotification = Notification & { open: boolean };
+
 export function NotificationProvider({children}: { children: ReactNode }): React.JSX.Element {
-    const [notifications, setNotifications] = useState<Notification[]>([]);
+    const [notifications, setNotifications] = useState<InternalNotification[]>([]);
     const nextId = useRef<number>(0);
 
+    // Start the Radix exit animation (open -> false), then drop it from the list once it finishes.
     const dismiss = useCallback((id: number) => {
-        setNotifications((current) => current.filter((n) => n.id !== id));
+        setNotifications((current) => current.map((n) => (n.id === id ? {...n, open: false} : n)));
+        setTimeout(() => {
+            setNotifications((current) => current.filter((n) => n.id !== id));
+        }, EXIT_MS);
     }, []);
 
     const push = useCallback((message: string, type: NotificationType = "info") => {
         const id = nextId.current++;
-        setNotifications((current) => [...current, {id, message, type}]);
+        setNotifications((current) => [...current, {id, message, type, open: true}]);
     }, []);
 
     return (
         <NotificationContext.Provider value={{notifications, push, dismiss}}>
-            {children}
-            <div className="fixed top-0 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 pt-4 w-full max-w-md pointer-events-none">
+            <Toast.Provider swipeDirection="up" duration={DURATION_MS}>
+                {children}
                 {notifications.map((notification) => (
-                    <Toast key={notification.id} notification={notification} onDismiss={dismiss}/>
+                    <Toast.Root
+                        key={notification.id}
+                        open={notification.open}
+                        onOpenChange={(open) => {
+                            if (!open) dismiss(notification.id);
+                        }}
+                        className="toast-root"
+                        style={{borderColor: TYPE_COLORS[notification.type]}}
+                    >
+                        <Toast.Title className="text-sm font-medium break-words">
+                            {notification.message}
+                        </Toast.Title>
+                        <Toast.Close className="text-lg leading-none opacity-70" aria-label="Close">
+                            ×
+                        </Toast.Close>
+                    </Toast.Root>
                 ))}
-            </div>
+                <Toast.Viewport className="toast-viewport"/>
+            </Toast.Provider>
         </NotificationContext.Provider>
-    );
-}
-
-function Toast({notification, onDismiss}: { notification: Notification; onDismiss: (id: number) => void }) {
-    const [visible, setVisible] = useState<boolean>(false);
-
-    useEffect(() => {
-        // Slide in on the next frame so the transition runs.
-        const enter = requestAnimationFrame(() => setVisible(true));
-        const timeout = setTimeout(() => setVisible(false), DURATION_MS);
-        const remove = setTimeout(() => onDismiss(notification.id), DURATION_MS + EXIT_MS);
-        return () => {
-            cancelAnimationFrame(enter);
-            clearTimeout(timeout);
-            clearTimeout(remove);
-        };
-    }, [notification.id, onDismiss]);
-
-    const close = () => {
-        setVisible(false);
-        setTimeout(() => onDismiss(notification.id), EXIT_MS);
-    };
-
-    return (
-        <div
-            onClick={close}
-            className={`pointer-events-auto cursor-pointer w-full rounded-lg shadow-lg px-4 py-3 flex items-center justify-between gap-3 transition-all duration-300 ease-out ${TYPE_STYLES[notification.type]}`}
-            style={{
-                transform: visible ? "translateY(0)" : "translateY(-140%)",
-                opacity: visible ? 1 : 0,
-            }}
-        >
-            <span className="text-sm font-medium break-words">{notification.message}</span>
-            <span className="text-lg leading-none opacity-70">×</span>
-        </div>
     );
 }
