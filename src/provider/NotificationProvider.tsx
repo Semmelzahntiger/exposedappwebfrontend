@@ -36,11 +36,14 @@ export function NotificationProvider({children}: { children: ReactNode }): React
     const push = useCallback((message: string, type: NotificationType = "info") => {
         const id = nextId.current++;
         setNotifications((current) => [...current, {id, message, type, open: true}]);
-    }, []);
+        // Drive auto-dismiss ourselves. Radix's own timer pauses on window blur / hover,
+        // which makes toasts linger; our timer fires regardless of focus.
+        setTimeout(() => dismiss(id), DURATION_MS);
+    }, [dismiss]);
 
     return (
         <NotificationContext.Provider value={{notifications, push, dismiss}}>
-            <Toast.Provider swipeDirection="up" duration={DURATION_MS}>
+            <Toast.Provider swipeDirection="up" duration={Infinity}>
                 {children}
                 {notifications.map((notification) => (
                     <Toast.Root

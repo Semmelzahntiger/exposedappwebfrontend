@@ -183,11 +183,8 @@ export type UpdateRoomStateMessage = Message<"update_room_state"> & {
     roomCode: string;
     players: RoomPlayerRole[];
     hostIsReceiver: boolean;
+    ownUUID: UUID;
     settings: RoomSettingsState;
-}
-export type NextRoundResource = {
-    mediaType: string;
-    url: string;
 }
 export type NextRoundMessage = Message<"next_round"> & {
     mediaItem: MediaItem;

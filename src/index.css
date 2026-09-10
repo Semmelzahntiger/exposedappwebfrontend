@@ -20,6 +20,7 @@
 
   color-scheme: dark;
   color: var(--text);
+  font-family: 'Roboto Mono Variable', ui-monospace, monospace;
 
   /* Page background: near-black gray base for OLED, with a deep purple glow up top as an accent only. */
   background:
@@ -31,4 +32,9 @@
   width: 100vw;
   height: 100vh;
   color: var(--text);
+}
+
+/* Form controls don't inherit font-family by default — force it so the font is global. */
+button, input, textarea, select {
+  font-family: inherit;
 }

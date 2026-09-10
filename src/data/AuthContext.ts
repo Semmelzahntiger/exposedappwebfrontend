@@ -13,9 +13,9 @@ export type RegisterPayload = {
 export type AuthValue = {
     isLoggedIn: boolean
     isLoggingIn: boolean
-    logIn: (payload : LoginPayload) => Promise<void>
+    logIn: (payload : LoginPayload) => Promise<boolean>
     logOut: () => Promise<void>
-    register: (payload : RegisterPayload) => Promise<void>
+    register: (payload : RegisterPayload) => Promise<boolean>
 }
 
 export const AuthContext : Context<AuthValue | null> = createContext<AuthValue | null>(null);

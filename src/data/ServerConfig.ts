@@ -1,4 +1,4 @@
-let serverUrl : string = "";
+let serverUrl : string = "http://localhost:8090";
 
 export function setServerUrl (newServerUrl : string) {
     serverUrl = newServerUrl;
@@ -10,10 +10,10 @@ export function getServerUrl() {
 export function loadServerUrl() {
     const url = localStorage.getItem("serverUrl");
     if (url) {
-        setServerUrl(url);
+        // setServerUrl(url);
     }
     else {
-        setServerUrl("");
+        // setServerUrl("");
     }
 }
 export function getWebSocketUrl() {
@@ -35,6 +35,9 @@ export function getDeleteUrl() {
 
 export function getLoginUrl() {
     return getAuthUrl() + "/login";
+}
+export function getLogoutUrl() {
+    return getAuthUrl() + "/logout";
 }
 export function getRegisterUrl() {
     return getAuthUrl() + "/register";

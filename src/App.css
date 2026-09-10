@@ -39,6 +39,362 @@
 }
 .btn:hover { filter: brightness(1.25); }
 .btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; filter: none; }
+
+/* ---- Round media player ---- */
+.media-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #000;
+  border-radius: 12px;
+}
+.media-stage-empty {
+  width: 100%;
+  height: 100%;
+  background: #000;
+}
+/* Fills the stage and centres a single media element. */
+.media-fill,
+.media-carousel,
+.media-carousel-page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.media-el {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Carousel prev/next buttons */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  font-size: 24px;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  color: var(--text);
+  cursor: pointer;
+  background-image:
+    linear-gradient(var(--surface-3), var(--surface-3)),
+    var(--border-gradient);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  transition: filter 150ms ease;
+}
+.carousel-arrow:hover { filter: brightness(1.3); }
+.carousel-arrow:disabled { opacity: 0.35; cursor: not-allowed; filter: none; }
+.carousel-arrow--left { left: 0.6rem; }
+.carousel-arrow--right { right: 0.6rem; }
+
+/* Carousel position dots */
+.carousel-dots {
+  position: absolute;
+  top: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  gap: 0.4rem;
+}
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--text) 40%, transparent);
+}
+.carousel-dot--active { background: var(--accent-2); }
+
+/* Audio control bar: mute button + volume slider */
+.media-controls {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 0.75rem;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface-0) 72%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-2) 40%, transparent);
+}
+.control-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--text);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.control-btn:hover { color: var(--accent-2); }
+
+.volume-slider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 84px;
+  height: 20px;
+  touch-action: none;
+  user-select: none;
+}
+.volume-slider-track {
+  position: relative;
+  flex-grow: 1;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--surface-3);
+}
+.volume-slider-range {
+  position: absolute;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent-2);
+}
+.volume-slider-thumb {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+.volume-slider-thumb:focus { outline: none; }
+
+/* Text + missing media */
+.media-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0 2rem;
+  text-align: center;
+}
+.media-text-caption {
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.media-text-quote {
+  font-size: 1.6rem;
+  font-style: italic;
+  color: var(--text);
+}
+.media-text-missing {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+/* Video load-error overlay */
+.media-error {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  background: color-mix(in srgb, var(--surface-0) 80%, transparent);
+}
+
+/* ---- Room: user list entries ---- */
+.user-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.6rem 0.9rem;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 2px solid var(--accent-2); /* color set per-role via inline style */
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 150ms ease, filter 150ms ease;
+}
+.user-entry:hover { background: var(--surface-3); filter: brightness(1.1); }
+
+/* ---- Radix Checkbox ---- */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  color: var(--text);
+  user-select: none;
+}
+.checkbox-root {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  background: var(--surface-2);
+  border: 2px solid var(--text-muted);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+.checkbox-root[data-state="checked"] {
+  border-color: var(--accent-2);
+  background: color-mix(in srgb, var(--accent) 25%, var(--surface-2));
+}
+.checkbox-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-2);
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* ---- Radix Dialog (modal) ---- */
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 40;
+}
+.dialog-content {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 41;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  min-width: 340px;
+  max-width: 90vw;
+  padding: 1.5rem;
+  background: var(--surface-1);
+  color: var(--text);
+  border: 2px solid var(--accent-2);
+  border-radius: 16px;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+}
+
+/* ---- Loading circle ----
+   Overlay fills and dims ONLY its positioned parent (parent needs position: relative). */
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit; /* match the container's rounded corners */
+  background: color-mix(in srgb, var(--surface-0) 65%, transparent);
+  backdrop-filter: blur(1px);
+  z-index: 10;
+  pointer-events: auto; /* swallow clicks so the dimmed content can't be interacted with */
+  cursor: wait;
+}
+.loading-spinner {
+  border: 4px solid var(--surface-3);
+  border-top-color: var(--accent-2);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---- Drag & drop zone ---- */
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  border: 2px dashed color-mix(in srgb, var(--accent-2) 45%, transparent);
+  border-radius: 14px;
+  background: var(--surface-1);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+}
+.dropzone:hover {
+  border-color: color-mix(in srgb, var(--accent-2) 70%, transparent);
+  color: var(--text);
+}
+.dropzone--active {
+  border-color: var(--accent-2);
+  border-style: solid;
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface-1));
+  color: var(--text);
+}
+.dropzone--has-file {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--accent-2) 60%, transparent);
+  color: var(--text);
+}
+
+/* ---- Radix RadioGroup — themed platform selector ---- */
+.radio-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+  padding: 0.6rem 0.9rem;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+.radio-item:hover { background: var(--surface-3); }
+.radio-item[data-state="checked"] {
+  border-color: var(--accent-2);
+  background: color-mix(in srgb, var(--accent) 16%, var(--surface-2));
+}
+/* The little circle that holds the checked dot */
+.radio-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  border: 2px solid var(--text-muted);
+  border-radius: 50%;
+  background: var(--surface-0);
+}
+.radio-item[data-state="checked"] .radio-control { border-color: var(--accent-2); }
+.radio-indicator {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent-2);
+}
 
 /* ---- Radix Toast — gray fill, colored border keyed to message type ---- */
 .toast-viewport {
