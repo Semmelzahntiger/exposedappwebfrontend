@@ -10,3 +10,5 @@ For the full product description, data handling, and consent details, see the ba
 ## Tech Stack
 * React
 * TypeScript
+* Tailwind CSS
+* Radix UI
