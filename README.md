@@ -1,6 +1,6 @@
 # ExposedApp (Web Frontend)
 
-Status: Work in Progress, many features are rapid prototypes built using AI and do not represent the final state.
+Status: Work in Progress, many features are rapid prototypes built using AI under strict guidance and do not represent the final state.
 
 React Front end for **Exposed** 
 
